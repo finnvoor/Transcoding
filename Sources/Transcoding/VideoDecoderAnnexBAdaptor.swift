@@ -47,8 +47,9 @@ public final class VideoDecoderAnnexBAdaptor {
             } else if nalu.isPFrame || nalu.isIFrame {
                 if nalu.isIFrame, let sps, let pps {
                     do {
-                        formatDescription = try CMVideoFormatDescription(h264ParameterSets: [sps, pps])
-                        videoDecoder.formatDescription = formatDescription
+                        let formatDescription = try CMVideoFormatDescription(h264ParameterSets: [sps, pps])
+                        videoDecoder.setFormatDescription(formatDescription)
+                        self.formatDescription = formatDescription
                     } catch {
                         Self.logger.error("Failed to create format description with error: \(error, privacy: .public)")
                     }
