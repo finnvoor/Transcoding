@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+
+jobs:
+  build:
+    name: Build
+    runs-on: macOS-14
+    strategy:
+      matrix:
+        destination:
+          - "generic/platform=iOS"
+          - "platform=macOS"
+          - "generic/platform=visionOS"
+          - "generic/platform=tvOS"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build platform ${{ matrix.destination }}
+        run: set -o pipefail && xcodebuild build -scheme Transcoding -destination "${{ matrix.destination }}" | xcbeautify --renderer github-actions
+  test:
+    name: Test
+    runs-on: macOS-13
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test
+        run: set -o pipefail && xcodebuild test -scheme Transcoding -destination "platform=macOS"
