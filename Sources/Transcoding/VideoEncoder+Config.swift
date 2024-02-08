@@ -4,7 +4,7 @@ public extension VideoEncoder {
     struct Config {
         // MARK: Lifecycle
 
-        init(
+        public init(
             codecType: CMVideoCodecType = kCMVideoCodecType_HEVC,
             maxKeyFrameInterval: Int? = nil,
             maxKeyFrameIntervalDuration: Int? = nil,
@@ -30,7 +30,7 @@ public extension VideoEncoder {
             realTime: Bool? = nil,
             maximizePowerEfficiency: Bool? = nil,
             sourceFrameCount: CFNumber? = nil,
-            expectedFrameRate: CFNumber? = nil,
+            expectedFrameRate: Int? = nil,
             baseLayerFrameRateFraction: Float? = nil,
             baseLayerBitRateFraction: Float? = nil,
             expectedDuration: CFNumber? = nil,
@@ -168,115 +168,115 @@ public extension VideoEncoder {
             enableLowLatencyRateControl: true
         )
 
-        // MARK: Internal
-
-        var codecType: CMVideoCodecType
+        public var codecType: CMVideoCodecType
 
         // MARK: - Frame dependency
 
-        var maxKeyFrameInterval: Int?
-        var maxKeyFrameIntervalDuration: Int?
-        var allowTemporalCompression: Bool?
-        var allowFrameReordering: Bool?
-        var allowOpenGOP: Bool?
+        public var maxKeyFrameInterval: Int?
+        public var maxKeyFrameIntervalDuration: Int?
+        public var allowTemporalCompression: Bool?
+        public var allowFrameReordering: Bool?
+        public var allowOpenGOP: Bool?
 
         // MARK: - Rate control
 
-        var averageBitRate: Int?
-        var dataRateLimits: [Double]?
-        var quality: Float?
-        var targetQualityForAlpha: Float?
-        var moreFramesBeforeStart: Bool?
-        var moreFramesAfterEnd: Bool?
-        var prioritizeEncodingSpeedOverQuality: Bool?
-        var constantBitRate: Int?
+        public var averageBitRate: Int?
+        public var dataRateLimits: [Double]?
+        public var quality: Float?
+        public var targetQualityForAlpha: Float?
+        public var moreFramesBeforeStart: Bool?
+        public var moreFramesAfterEnd: Bool?
+        public var prioritizeEncodingSpeedOverQuality: Bool?
+        public var constantBitRate: Int?
 
         // MARK: - Bitstream configuration
 
-        var profileLevel: CFString? // TODO: - Enum
-        var outputBitDepth: CFNumber? // TODO: - Better type
-        var hdrMetadataInsertionMode: CFString? // TODO: - Enum
-        var h264EntropyMode: CFString? // TODO: - Enum
-        var depth: CFNumber? // TODO: - Enum
-        var preserveAlphaChannel: Bool?
+        public var profileLevel: CFString? // TODO: - Enum
+        public var outputBitDepth: CFNumber? // TODO: - Better type
+        public var hdrMetadataInsertionMode: CFString? // TODO: - Enum
+        public var h264EntropyMode: CFString? // TODO: - Enum
+        public var depth: CFNumber? // TODO: - Enum
+        public var preserveAlphaChannel: Bool?
 
         // MARK: - Runtime restrictions
 
-        var maxFrameDelayCount: CFNumber? // TODO: - Better type
-        var maxH264SliceBytes: Int32?
-        var realTime: Bool?
-        var maximizePowerEfficiency: Bool?
+        public var maxFrameDelayCount: CFNumber? // TODO: - Better type
+        public var maxH264SliceBytes: Int32?
+        public var realTime: Bool?
+        public var maximizePowerEfficiency: Bool?
 
         // MARK: - Hints
 
-        var sourceFrameCount: CFNumber? // TODO: - Better type
-        var expectedFrameRate: CFNumber? // TODO: - Better type
-        var baseLayerFrameRateFraction: Float?
-        var baseLayerBitRateFraction: Float?
-        var expectedDuration: CFNumber? // TODO: - Better type
-        var baseLayerFrameRate: CFNumber? // TODO: - Better type
-        var referenceBufferCount: CFNumber? // TODO: - Better type
+        public var sourceFrameCount: CFNumber? // TODO: - Better type
+        public var expectedFrameRate: Int? // TODO: - Better type
+        public var baseLayerFrameRateFraction: Float?
+        public var baseLayerBitRateFraction: Float?
+        public var expectedDuration: CFNumber? // TODO: - Better type
+        public var baseLayerFrameRate: CFNumber? // TODO: - Better type
+        public var referenceBufferCount: CFNumber? // TODO: - Better type
 
         // MARK: - Hardware acceleration
 
         #if os(macOS)
-        var enableHardwareAcceleratedVideoEncoder: Bool?
-        var requireHardwareAcceleratedVideoEncoder: Bool?
+        public var enableHardwareAcceleratedVideoEncoder: Bool?
+        public var requireHardwareAcceleratedVideoEncoder: Bool?
         #endif
 
-        var requiredEncoderGPURegistryID: UInt64?
-        var preferredEncoderGPURegistryID: UInt64?
+        public var requiredEncoderGPURegistryID: UInt64?
+        public var preferredEncoderGPURegistryID: UInt64?
 
         // MARK: - Clean aperture and pixel aspect ratio
 
-        var cleanAperture: CFDictionary? // TODO: - Better type
-        var pixelAspectRatio: CFDictionary? // TODO: - Better type
-        var fieldCount: CFNumber? // TODO: - Better type
-        var fieldDetail: CFString? // TODO: - Enum
-        var aspectRatio16x9: Bool?
-        var progressiveScan: Bool?
+        public var cleanAperture: CFDictionary? // TODO: - Better type
+        public var pixelAspectRatio: CFDictionary? // TODO: - Better type
+        public var fieldCount: CFNumber? // TODO: - Better type
+        public var fieldDetail: CFString? // TODO: - Enum
+        public var aspectRatio16x9: Bool?
+        public var progressiveScan: Bool?
 
         // MARK: - Color
 
-        var colorPrimaries: CFString? // TODO: - Enum
-        var transferFunction: CFString? // TODO: - Enum
-        var yCbCrMatrix: CFString? // TODO: - Enum
-        var iccProfile: CFData? // TODO: - Better type
-        var masteringDisplayColorVolume: CFData? // TODO: - Better type
-        var contentLightLevelInfo: CFData? // TODO: - Better type
-        var gammaLevel: CFNumber? // TODO: - Better type
-        var alphaChannelMode: CFString? // TODO: - Enum
+        public var colorPrimaries: CFString? // TODO: - Enum
+        public var transferFunction: CFString? // TODO: - Enum
+        public var yCbCrMatrix: CFString? // TODO: - Enum
+        public var iccProfile: CFData? // TODO: - Better type
+        public var masteringDisplayColorVolume: CFData? // TODO: - Better type
+        public var contentLightLevelInfo: CFData? // TODO: - Better type
+        public var gammaLevel: CFNumber? // TODO: - Better type
+        public var alphaChannelMode: CFString? // TODO: - Enum
 
         // MARK: - Pre-compression processing
 
-        var pixelTransferProperties: CFDictionary? // TODO: - Better type
+        public var pixelTransferProperties: CFDictionary? // TODO: - Better type
 
         // MARK: - Multi-pass
 
-        var multiPassStorage: VTMultiPassStorage?
+        public var multiPassStorage: VTMultiPassStorage?
 
         // MARK: - Encoder information
 
-        var encoderID: CFString?
-        var preserveDynamicHDRMetadata: Bool?
-        var enableLowLatencyRateControl: Bool?
-        var maxAllowedFrameQP: CFNumber? // TODO: - Better type
-        var minAllowedFrameQP: CFNumber? // TODO: - Better type
-        var enableLTR: Bool?
+        public var encoderID: CFString?
+        public var preserveDynamicHDRMetadata: Bool?
+        public var enableLowLatencyRateControl: Bool?
+        public var maxAllowedFrameQP: CFNumber? // TODO: - Better type
+        public var minAllowedFrameQP: CFNumber? // TODO: - Better type
+        public var enableLTR: Bool?
 
         // MARK: - Multi-image compression
 
-        var mvHEVCVideoLayerIDs: CFArray? // TODO: - Better type
-        var mvHEVCViewIDs: CFArray? // TODO: - Better type
-        var mvHEVCLeftAndRightViewIDs: CFArray? // TODO: - Better type
+        public var mvHEVCVideoLayerIDs: CFArray? // TODO: - Better type
+        public var mvHEVCViewIDs: CFArray? // TODO: - Better type
+        public var mvHEVCLeftAndRightViewIDs: CFArray? // TODO: - Better type
 
         // MARK: - VideoExtendedUsage signaling
 
-        var heroEye: CFString? // TODO: - Enum
-        var stereoCameraBaseline: UInt32?
-        var horizontalDisparityAdjustment: Int32?
-        var hasLeftStereoEyeView: Bool?
-        var hasRightStereoEyeView: Bool?
+        public var heroEye: CFString? // TODO: - Enum
+        public var stereoCameraBaseline: UInt32?
+        public var horizontalDisparityAdjustment: Int32?
+        public var hasLeftStereoEyeView: Bool?
+        public var hasRightStereoEyeView: Bool?
+
+        // MARK: Internal
 
         var encoderSpecification: CFDictionary {
             var encoderSpecification: [CFString: CFTypeRef] = [:]
@@ -395,12 +395,14 @@ public extension VideoEncoder {
                     value: prioritizeEncodingSpeedOverQuality as CFBoolean
                 )
             }
-            if let constantBitRate {
-                VTSessionSetProperty(
-                    compressionSession,
-                    key: kVTCompressionPropertyKey_ConstantBitRate,
-                    value: constantBitRate as CFNumber
-                )
+            if #available(iOS 16.0, tvOS 16.0, *) {
+                if let constantBitRate {
+                    VTSessionSetProperty(
+                        compressionSession,
+                        key: kVTCompressionPropertyKey_ConstantBitRate,
+                        value: constantBitRate as CFNumber
+                    )
+                }
             }
             if let profileLevel {
                 VTSessionSetProperty(
@@ -409,12 +411,14 @@ public extension VideoEncoder {
                     value: profileLevel as CFString
                 )
             }
-            if let outputBitDepth {
-                VTSessionSetProperty(
-                    compressionSession,
-                    key: kVTCompressionPropertyKey_OutputBitDepth,
-                    value: outputBitDepth as CFNumber
-                )
+            if #available(iOS 16.0, tvOS 16.0, *) {
+                if let outputBitDepth {
+                    VTSessionSetProperty(
+                        compressionSession,
+                        key: kVTCompressionPropertyKey_OutputBitDepth,
+                        value: outputBitDepth as CFNumber
+                    )
+                }
             }
             if let hdrMetadataInsertionMode {
                 VTSessionSetProperty(
@@ -437,12 +441,14 @@ public extension VideoEncoder {
                     value: depth as CFNumber
                 )
             }
-            if let preserveAlphaChannel {
-                VTSessionSetProperty(
-                    compressionSession,
-                    key: kVTCompressionPropertyKey_PreserveAlphaChannel,
-                    value: preserveAlphaChannel as CFBoolean
-                )
+            if #available(iOS 16.0, tvOS 16.0, *) {
+                if let preserveAlphaChannel {
+                    VTSessionSetProperty(
+                        compressionSession,
+                        key: kVTCompressionPropertyKey_PreserveAlphaChannel,
+                        value: preserveAlphaChannel as CFBoolean
+                    )
+                }
             }
             if let maxFrameDelayCount {
                 VTSessionSetProperty(
@@ -514,12 +520,14 @@ public extension VideoEncoder {
                     value: baseLayerFrameRate as CFNumber
                 )
             }
-            if let referenceBufferCount {
-                VTSessionSetProperty(
-                    compressionSession,
-                    key: kVTCompressionPropertyKey_ReferenceBufferCount,
-                    value: referenceBufferCount as CFNumber
-                )
+            if #available(iOS 16.0, tvOS 16.0, *) {
+                if let referenceBufferCount {
+                    VTSessionSetProperty(
+                        compressionSession,
+                        key: kVTCompressionPropertyKey_ReferenceBufferCount,
+                        value: referenceBufferCount as CFNumber
+                    )
+                }
             }
             if let cleanAperture {
                 VTSessionSetProperty(
@@ -654,12 +662,14 @@ public extension VideoEncoder {
                     value: maxAllowedFrameQP as CFNumber
                 )
             }
-            if let minAllowedFrameQP {
-                VTSessionSetProperty(
-                    compressionSession,
-                    key: kVTCompressionPropertyKey_MinAllowedFrameQP,
-                    value: minAllowedFrameQP as CFNumber
-                )
+            if #available(iOS 16.0, tvOS 16.0, *) {
+                if let minAllowedFrameQP {
+                    VTSessionSetProperty(
+                        compressionSession,
+                        key: kVTCompressionPropertyKey_MinAllowedFrameQP,
+                        value: minAllowedFrameQP as CFNumber
+                    )
+                }
             }
             if let enableLTR {
                 VTSessionSetProperty(
@@ -668,6 +678,7 @@ public extension VideoEncoder {
                     value: enableLTR as CFBoolean
                 )
             }
+            #if os(macOS) || os(iOS) || os(visionOS)
             if #available(macOS 14.0, iOS 17.0, *) {
                 if let mvHEVCVideoLayerIDs {
                     VTSessionSetProperty(
@@ -726,6 +737,7 @@ public extension VideoEncoder {
                     )
                 }
             }
+            #endif
         }
     }
 }

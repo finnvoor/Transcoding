@@ -28,13 +28,13 @@ public final class VideoEncoder {
 
     public var config: Config {
         didSet {
-            compressionQueue.sync {
+            encodingQueue.sync {
                 sessionInvalidated = true
             }
         }
     }
 
-    public var compressedSampleBuffers: AsyncStream<CMSampleBuffer> {
+    public var encodedSampleBuffers: AsyncStream<CMSampleBuffer> {
         .init { continuation in
             let id = UUID()
             continuations[id] = continuation
@@ -45,13 +45,16 @@ public final class VideoEncoder {
     }
 
     public func invalidate() {
-        compressionQueue.sync {
+        encodingQueue.sync {
             sessionInvalidated = true
         }
     }
 
     public func encode(_ sampleBuffer: CMSampleBuffer) {
-        guard let imageBuffer = sampleBuffer.imageBuffer else { return }
+        guard let imageBuffer = sampleBuffer.imageBuffer else {
+            Self.logger.error("Invalid sample buffer passed to video encoder; missing imageBuffer")
+            return
+        }
         encode(
             imageBuffer,
             presentationTimeStamp: sampleBuffer.presentationTimeStamp,
@@ -64,7 +67,7 @@ public final class VideoEncoder {
         presentationTimeStamp: CMTime = CMClockGetTime(.hostTimeClock),
         duration: CMTime = .invalid
     ) {
-        compressionQueue.sync {
+        encodingQueue.sync {
             let pixelBufferWidth = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
             let pixelBufferHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
             if pixelBufferWidth != outputSize?.width || pixelBufferHeight != outputSize?.height {
@@ -75,7 +78,10 @@ public final class VideoEncoder {
                 compressionSession = createCompressionSession()
             }
 
-            guard let compressionSession else { return }
+            guard let compressionSession else {
+                Self.logger.error("No compression session")
+                return
+            }
 
             guard CVPixelBufferLockBaseAddress(
                 pixelBuffer,
@@ -91,19 +97,27 @@ public final class VideoEncoder {
                 )
             }
 
-            var infoFlagsOut = VTEncodeInfoFlags(rawValue: 0)
-            let status = VTCompressionSessionEncodeFrame(
-                compressionSession,
-                imageBuffer: pixelBuffer,
-                presentationTimeStamp: presentationTimeStamp,
-                duration: duration,
-                frameProperties: nil,
-                infoFlagsOut: &infoFlagsOut,
-                outputHandler: outputHandler
-            )
-            guard status == noErr else {
-                Self.logger.error("Failed to encode frame with status: \(status, privacy: .public)")
-                return
+            do {
+                try compressionSession.encodeFrame(
+                    pixelBuffer,
+                    presentationTimeStamp: presentationTimeStamp,
+                    duration: duration
+                ) { [weak self] status, _, sampleBuffer in
+                    guard let self else { return }
+                    outputQueue.sync {
+                        do {
+                            if let error = VideoTranscoderError(status: status) { throw error }
+                            guard let sampleBuffer else { return }
+                            for continuation in self.continuations.values {
+                                continuation.yield(sampleBuffer)
+                            }
+                        } catch {
+                            Self.logger.error("Error in decode frame output handler: \(error, privacy: .public)")
+                        }
+                    }
+                }
+            } catch {
+                Self.logger.error("Failed to encode frame with error: \(error, privacy: .public)")
             }
         }
     }
@@ -116,7 +130,7 @@ public final class VideoEncoder {
 
     var willEnterForegroundTask: Task<Void, Never>?
 
-    lazy var compressionQueue = DispatchQueue(
+    lazy var encodingQueue = DispatchQueue(
         label: String(describing: Self.self),
         qos: .userInitiated
     )
@@ -128,13 +142,13 @@ public final class VideoEncoder {
 
     var sessionInvalidated = false {
         didSet {
-            dispatchPrecondition(condition: .onQueue(compressionQueue))
+            dispatchPrecondition(condition: .onQueue(encodingQueue))
         }
     }
 
     var compressionSession: VTCompressionSession? {
         didSet {
-            dispatchPrecondition(condition: .onQueue(compressionQueue))
+            dispatchPrecondition(condition: .onQueue(encodingQueue))
             if let oldValue { VTCompressionSessionInvalidate(oldValue) }
             sessionInvalidated = false
         }
@@ -142,53 +156,25 @@ public final class VideoEncoder {
 
     var outputSize: CGSize? {
         didSet {
-            dispatchPrecondition(condition: .onQueue(compressionQueue))
+            dispatchPrecondition(condition: .onQueue(encodingQueue))
             sessionInvalidated = true
         }
     }
 
     func createCompressionSession() -> VTCompressionSession? {
-        dispatchPrecondition(condition: .onQueue(compressionQueue))
-
-        var session: VTCompressionSession?
-
-        let status = VTCompressionSessionCreate(
-            allocator: nil,
-            width: Int32(outputSize?.width ?? 1920),
-            height: Int32(outputSize?.height ?? 1080),
-            codecType: config.codecType,
-            encoderSpecification: config.encoderSpecification,
-            imageBufferAttributes: nil,
-            compressedDataAllocator: nil,
-            outputCallback: nil,
-            refcon: nil,
-            compressionSessionOut: &session
-        )
-        guard status == noErr, let session else {
-            Self.logger.error("Failed to create compression session with status: \(status, privacy: .public)")
+        dispatchPrecondition(condition: .onQueue(encodingQueue))
+        do {
+            let session = try VTCompressionSession.create(
+                size: outputSize ?? CGSize(width: 1920, height: 1080),
+                codecType: config.codecType,
+                encoderSpecification: config.encoderSpecification
+            )
+            config.apply(to: session)
+            VTCompressionSessionPrepareToEncodeFrames(session)
+            return session
+        } catch {
+            Self.logger.error("Failed to create compression session with error: \(error, privacy: .public)")
             return nil
-        }
-
-        config.apply(to: session)
-
-        VTCompressionSessionPrepareToEncodeFrames(session)
-
-        return session
-    }
-
-    func outputHandler(
-        status: OSStatus,
-        infoFlags _: VTEncodeInfoFlags,
-        sampleBuffer: CMSampleBuffer?
-    ) {
-        outputQueue.sync {
-            guard status == noErr, let sampleBuffer else {
-                Self.logger.error("Error in encode frame output: \(status, privacy: .public)")
-                return
-            }
-            for continuation in continuations.values {
-                continuation.yield(sampleBuffer)
-            }
         }
     }
 }
