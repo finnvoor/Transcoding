@@ -7,7 +7,7 @@ import XCTest
 final class TranscodingTests: XCTestCase {
     func testFrameEncodedAndDecoded() {
         execute(withTimeout: 5) {
-            let encoder = VideoEncoder(config: .init(codecType: kCMVideoCodecType_H264))
+            let encoder = VideoEncoder(config: .ultraLowLatency)
             var stream = encoder.encodedSampleBuffers.makeAsyncIterator()
             var pixelBuffer: CVPixelBuffer!
             CVPixelBufferCreate(nil, 3840, 2160, kCVPixelFormatType_32BGRA, nil, &pixelBuffer)
@@ -16,7 +16,7 @@ final class TranscodingTests: XCTestCase {
 
             let encodedSampleBuffer = await stream.next()!
             XCTAssertNotNil(encodedSampleBuffer.dataBuffer)
-            XCTAssertEqual(encodedSampleBuffer.formatDescription?.mediaSubType, .h264)
+            XCTAssertEqual(encodedSampleBuffer.formatDescription?.mediaSubType, .hevc)
 
             let decoder = VideoDecoder(config: .init())
             stream = decoder.decodedSampleBuffers.makeAsyncIterator()
@@ -31,7 +31,7 @@ final class TranscodingTests: XCTestCase {
 
     func testInvalidateSession() {
         execute(withTimeout: 5) {
-            let encoder = VideoEncoder(config: .init(codecType: kCMVideoCodecType_H264))
+            let encoder = VideoEncoder(config: .ultraLowLatency)
             var stream = encoder.encodedSampleBuffers.makeAsyncIterator()
             var pixelBuffer: CVPixelBuffer?
             CVPixelBufferCreate(nil, 3840, 2160, kCVPixelFormatType_32BGRA, nil, &pixelBuffer)
@@ -55,7 +55,7 @@ final class TranscodingTests: XCTestCase {
 
     func testContinuationsEmptied() {
         execute(withTimeout: 5) {
-            let encoder = VideoEncoder(config: .init(codecType: kCMVideoCodecType_H264))
+            let encoder = VideoEncoder(config: .ultraLowLatency)
             var stream: AsyncStream<CMSampleBuffer>? = encoder.encodedSampleBuffers
             _ = stream
             XCTAssertEqual(encoder.continuations.count, 1)
@@ -72,12 +72,12 @@ final class TranscodingTests: XCTestCase {
 
     func testAnnexBAdaptors() {
         execute(withTimeout: 5) {
-            let encoder = VideoEncoder(config: .init(codecType: kCMVideoCodecType_H264))
+            let encoder = VideoEncoder(config: .ultraLowLatency)
             let encoderAdaptor = VideoEncoderAnnexBAdaptor(videoEncoder: encoder)
             var annexBStream = encoderAdaptor.annexBData.makeAsyncIterator()
             let decoder = VideoDecoder(config: .init())
             var decodedStream = decoder.decodedSampleBuffers.makeAsyncIterator()
-            let decoderAdaptor = try VideoDecoderAnnexBAdaptor(videoDecoder: decoder, codec: .h264)
+            let decoderAdaptor = try VideoDecoderAnnexBAdaptor(videoDecoder: decoder, codec: .hevc)
 
             var pixelBuffer: CVPixelBuffer!
             CVPixelBufferCreate(nil, 3840, 2160, kCVPixelFormatType_32BGRA, nil, &pixelBuffer)
