@@ -18,7 +18,7 @@ public final class VideoEncoder {
             for await _ in await NotificationCenter.default.notifications(
                 named: UIApplication.willEnterForegroundNotification
             ) {
-                self?.sessionInvalidated = true
+                self?.invalidate()
             }
         }
         #endif

@@ -83,7 +83,10 @@ public final class VideoDecoderAnnexBAdaptor {
     }
 
     func decodeAVCCFrame(_ data: Data) {
-        guard let formatDescription else { return }
+        guard let formatDescription else {
+            Self.logger.warning("No format description; need sync frame")
+            return
+        }
         var data = data
         data.withUnsafeMutableBytes { pointer in
             do {
