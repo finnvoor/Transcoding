@@ -1,6 +1,6 @@
 # Transcoding (WIP)
 
-
+Example usage. You can also use it without the annex B adaptors if you only need compressed sample buffers, but the annex B adaptors are perfect for sending video over a network.
 ```swift
 let videoEncoder = VideoEncoder(config: .ultraLowLatency)
 let videoEncoderAnnexBAdaptor = VideoEncoderAnnexBAdaptor(
