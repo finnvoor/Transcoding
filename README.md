@@ -1,4 +1,5 @@
 # Transcoding (WIP)
+It is recommended that you pin to a specific commit at the moment, since there may be breaking changes before an official release.
 
 Example usage. You can also use it without the annex B adaptors if you only need compressed sample buffers, but the annex B adaptors are perfect for sending video over a network.
 ```swift
@@ -7,7 +8,7 @@ let videoEncoderAnnexBAdaptor = VideoEncoderAnnexBAdaptor(
     videoEncoder: videoEncoder
 )
 let videoDecoder = VideoDecoder(config: .init())
-let videoDecoderAnnexBAdaptor = try! VideoDecoderAnnexBAdaptor(
+let videoDecoderAnnexBAdaptor = VideoDecoderAnnexBAdaptor(
     videoDecoder: videoDecoder,
     codec: .hevc
 )

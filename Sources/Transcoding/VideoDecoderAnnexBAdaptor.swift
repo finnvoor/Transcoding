@@ -10,7 +10,7 @@ public final class VideoDecoderAnnexBAdaptor {
     public init(
         videoDecoder: VideoDecoder,
         codec: Codec
-    ) throws {
+    ) {
         self.videoDecoder = videoDecoder
         self.codec = codec
     }
