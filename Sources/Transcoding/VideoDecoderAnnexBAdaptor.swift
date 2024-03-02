@@ -114,11 +114,3 @@ public extension VideoDecoderAnnexBAdaptor {
         case hevc
     }
 }
-
-// MARK: VideoDecoderAnnexBAdaptor.Error
-
-public extension VideoDecoderAnnexBAdaptor {
-    enum Error: Swift.Error {
-        case unsupportedCodec
-    }
-}

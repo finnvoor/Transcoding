@@ -77,7 +77,7 @@ final class TranscodingTests: XCTestCase {
             var annexBStream = encoderAdaptor.annexBData.makeAsyncIterator()
             let decoder = VideoDecoder(config: .init())
             var decodedStream = decoder.decodedSampleBuffers.makeAsyncIterator()
-            let decoderAdaptor = try VideoDecoderAnnexBAdaptor(videoDecoder: decoder, codec: .hevc)
+            let decoderAdaptor = VideoDecoderAnnexBAdaptor(videoDecoder: decoder, codec: .hevc)
 
             var pixelBuffer: CVPixelBuffer!
             CVPixelBufferCreate(nil, 3840, 2160, kCVPixelFormatType_32BGRA, nil, &pixelBuffer)
