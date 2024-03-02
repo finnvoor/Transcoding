@@ -1,13 +1,52 @@
-# Transcoding (WIP)
-It is recommended that you pin to a specific commit at the moment, since there may be breaking changes before an official release.
+# Transcoding
+A simple Swift package for video encoding and decoding with Annex-B adaptors optimized for transfering video over a network.
 
-Example usage. You can also use it without the annex B adaptors if you only need compressed sample buffers, but the annex B adaptors are perfect for sending video over a network.
+<img width="2802" alt="Example data flow" src="https://github.com/finnvoor/Transcoding/assets/8284016/3c0cb0dc-ebaf-4419-b43c-d47553ca9f06">
+
+> Example data flow when using `Transcoding`
+
+`Transcoding` is used for video encoding and decoding in [Castaway](https://finnvoorhees.com/castaway), an app that streams HDMI capture devices from an iPad or Mac to a nearby Vision Pro.
+
+## Usage
+### VideoEncoder
+`VideoEncoder` is an object that takes `CMSampleBuffer`s containing `CVPixelBuffer`s and outputs a stream of `CMSampleBuffer`s containing `CMBlockBuffer`s containing compressed H264/HEVC data. `VideoEncoder` is initialized with a `Config`, with presets for live capture, active transcoding, background transcoding, and ultra low latency following Apple's recommendations.
+
+#### Usage
+```swift
+let videoEncoder = VideoEncoder(config: .ultraLowLatency)
+encoderStreamTask = Task {
+    for await encodedSampleBuffer in videoEncoder.encodedSampleBuffers {
+        // encodedSampleBuffer: CMSampleBuffer > CMBlockBuffer
+    }
+}
+videoEncoder.encode(sampleBuffer)
+```
+
+### VideoDecoder
+`VideoEncoder` is an object that takes `CMSampleBuffer`s containing `CMBlockBuffers`s containing compressed H264/HEVC data and outputs a stream of `CMSampleBuffer`s containing `CVPixelBuffer`s. `VideoDecoder` is initialized with a `Config` containing various optional decompression settings.
+
+#### Usage
+```swift
+let videoDecoder = VideoDecoder(config: .init(realTime: true))
+decoderStreamTask = Task {
+    for await decodedSampleBuffer in videoDecoder.decodedSampleBuffers {
+        // decodedSampleBuffer: CMSampleBuffer > CVPixelBuffer
+    }
+}
+videoDecoder.decode(sampleBuffer)
+```
+
+### Annex B
+`VideoEncoderAnnexBAdaptor` and `VideoDecoderAnnexBAdaptor` can be used to convert compressed `CMSampleBuffer`s to and from an Annex B (ITU-T-REC-H.265) byte stream. This is ideal for sending compressed video data over a network.
+
+### Example Pipeline
+In this example, video frames from a capture device are encoded and decoded as a Annex-B data stream optimized for low latency.
 ```swift
 let videoEncoder = VideoEncoder(config: .ultraLowLatency)
 let videoEncoderAnnexBAdaptor = VideoEncoderAnnexBAdaptor(
     videoEncoder: videoEncoder
 )
-let videoDecoder = VideoDecoder(config: .init())
+let videoDecoder = VideoDecoder(config: .init(realTime: true))
 let videoDecoderAnnexBAdaptor = VideoDecoderAnnexBAdaptor(
     videoDecoder: videoDecoder,
     codec: .hevc
