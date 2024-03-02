@@ -1,4 +1,6 @@
 # Transcoding
+[![CI](https://github.com/finnvoor/Transcoding/actions/workflows/CI.yml/badge.svg)](https://github.com/finnvoor/Transcoding/actions/workflows/CI.yml) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ffinnvoor%2FTranscoding%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/finnvoor/Transcoding) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ffinnvoor%2FTranscoding%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/finnvoor/Transcoding)
+
 A simple Swift package for video encoding and decoding with Annex-B adaptors optimized for transfering video over a network.
 
 <img width="2802" alt="Example data flow" src="https://github.com/finnvoor/Transcoding/assets/8284016/3c0cb0dc-ebaf-4419-b43c-d47553ca9f06">
