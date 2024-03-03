@@ -1,7 +1,7 @@
 # Transcoding
 [![CI](https://github.com/finnvoor/Transcoding/actions/workflows/CI.yml/badge.svg)](https://github.com/finnvoor/Transcoding/actions/workflows/CI.yml) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ffinnvoor%2FTranscoding%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/finnvoor/Transcoding) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ffinnvoor%2FTranscoding%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/finnvoor/Transcoding)
 
-A simple Swift package for video encoding and decoding with Annex-B adaptors optimized for transfering video over a network.
+A simple Swift package for video encoding and decoding with Annex-B adaptors optimized for transferring video over a network.
 
 <img width="2802" alt="Example data flow" src="https://github.com/finnvoor/Transcoding/assets/8284016/3c0cb0dc-ebaf-4419-b43c-d47553ca9f06">
 
@@ -11,7 +11,7 @@ A simple Swift package for video encoding and decoding with Annex-B adaptors opt
 
 ## Usage
 ### VideoEncoder
-`VideoEncoder` is an object that takes `CMSampleBuffer`s containing `CVPixelBuffer`s and outputs a stream of `CMSampleBuffer`s containing `CMBlockBuffer`s containing compressed H264/HEVC data. `VideoEncoder` is initialized with a `Config`, with presets for live capture, active transcoding, background transcoding, and ultra low latency following Apple's recommendations.
+`VideoEncoder` is an object that takes `CMSampleBuffer`s containing `CVPixelBuffer`s and outputs a stream of `CMSampleBuffer`s containing `CMBlockBuffer`s containing compressed H264/HEVC data. `VideoEncoder` is initialized with a `Config`, with presets for live capture, active transcoding, background transcoding, and ultra-low latency following Apple's recommendations.
 
 #### Usage
 ```swift
@@ -42,7 +42,7 @@ videoDecoder.decode(sampleBuffer)
 `VideoEncoderAnnexBAdaptor` and `VideoDecoderAnnexBAdaptor` can be used to convert compressed `CMSampleBuffer`s to and from an Annex B (ITU-T-REC-H.265) byte stream. This is ideal for sending compressed video data over a network.
 
 ### Example Pipeline
-In this example, video frames from a capture device are encoded and decoded as a Annex-B data stream optimized for low latency.
+In this example, video frames from a capture device are encoded and decoded as an Annex-B data stream optimized for low latency.
 ```swift
 let videoEncoder = VideoEncoder(config: .ultraLowLatency)
 let videoEncoderAnnexBAdaptor = VideoEncoderAnnexBAdaptor(
