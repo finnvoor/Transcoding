@@ -25,7 +25,7 @@ videoEncoder.encode(sampleBuffer)
 ```
 
 ### VideoDecoder
-`VideoEncoder` is an object that takes `CMSampleBuffer`s containing `CMBlockBuffers`s containing compressed H264/HEVC data and outputs a stream of `CMSampleBuffer`s containing `CVPixelBuffer`s. `VideoDecoder` is initialized with a `Config` containing various optional decompression settings.
+`VideoDecoder` is an object that takes `CMSampleBuffer`s containing `CMBlockBuffers`s containing compressed H264/HEVC data and outputs a stream of `CMSampleBuffer`s containing `CVPixelBuffer`s. `VideoDecoder` is initialized with a `Config` containing various optional decompression settings.
 
 #### Usage
 ```swift
