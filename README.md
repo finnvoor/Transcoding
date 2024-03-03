@@ -3,11 +3,9 @@
 
 A simple Swift package for video encoding and decoding with Annex-B adaptors optimized for transferring video over a network.
 
-<img width="2802" alt="Example data flow" src="https://github.com/finnvoor/Transcoding/assets/8284016/3c0cb0dc-ebaf-4419-b43c-d47553ca9f06">
-
-> Example data flow when using `Transcoding`
-
 `Transcoding` is used for video encoding and decoding in [Castaway](https://finnvoorhees.com/castaway), an app that streams HDMI capture devices from an iPad or Mac to a nearby Vision Pro.
+
+<img width="2802" alt="Example data flow" src="https://github.com/finnvoor/Transcoding/assets/8284016/3c0cb0dc-ebaf-4419-b43c-d47553ca9f06">
 
 ## Usage
 ### VideoEncoder
