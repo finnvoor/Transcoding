@@ -23,6 +23,12 @@ public final class VideoEncoder {
         }
         #endif
     }
+    
+    deinit {
+        if let compressionSession = compressionSession {
+            VTCompressionSessionInvalidate(compressionSession)
+        }
+    }
 
     // MARK: Public
 
