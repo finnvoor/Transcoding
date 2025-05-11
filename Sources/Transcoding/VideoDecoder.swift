@@ -23,6 +23,12 @@ public final class VideoDecoder {
         }
         #endif
     }
+    
+    deinit {
+        if let decompressionSession = decompressionSession {
+            VTDecompressionSessionInvalidate(decompressionSession)
+        }
+    }
 
     // MARK: Public
 
